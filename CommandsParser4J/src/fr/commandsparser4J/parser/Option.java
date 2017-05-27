@@ -38,6 +38,12 @@ public class Option {
     private final boolean hasArgument;
     
     /**
+     * The number of arguments that must have this option.
+     * If it is negative, this option can take any number of arguments according to hasArgument.
+     */
+    private final int nbArguments;
+    
+    /**
      * The name of this Option.
      */
     private final String name;
@@ -53,16 +59,47 @@ public class Option {
     private final String description;
 
     /**
-     * Constructs and initializes an Option with the specified parameters.
+     * Constructs and initializes an Option with the specified parameters, but with not specified number of arguments.
      * @param name the name of this Option
      * @param shortcut the shortcut associated to this option
      * @param isRequired if true, the option is necessary to be given; otherwise it is optional
-     * @param hasArgument if true, the option has an argument; otherwise not
+     * @param hasArgument if true, the option has at least one argument; otherwise not
      * @param description the description of this option that will be displayed in usage() of the application
      */
     public Option(String name, String shortcut, boolean isRequired, boolean hasArgument, String description) {
         this.isRequired = isRequired;
         this.hasArgument = hasArgument;
+        if(hasArgument == false){
+            this.nbArguments = 0;
+        }else{
+            this.nbArguments = -1;//we do not have a specific number of arguments
+        }
+        this.name = name;
+        this.shortcut = shortcut;
+        if (!description.endsWith(".")){
+            this.description = description + ".";
+        }else{
+            this.description = description;
+        }
+    }
+    
+    /**
+     * Constructs and initializes an Option with the specified parameters, including a specific number of arguments.
+     * @param name the name of this Option
+     * @param shortcut the shortcut associated to this option
+     * @param isRequired if true, the option is necessary to be given; otherwise it is optional
+     * @param nbArguments the number of arguments that must take this option.
+     * @param description the description of this option that will be displayed in usage() of the application
+     */
+    public Option(String name, String shortcut, boolean isRequired, int nbArguments, String description) {
+        this.isRequired = isRequired;
+        if(nbArguments<=0){
+            this.nbArguments = 0;
+            this.hasArgument = false;
+        }else{
+            this.nbArguments = nbArguments;
+            this.hasArgument = true;
+        }
         this.name = name;
         this.shortcut = shortcut;
         if (!description.endsWith(".")){
@@ -86,6 +123,14 @@ public class Option {
      */
     public boolean hasArgument() {
         return hasArgument;
+    }
+
+    /**
+     * Returns -1 if there is no specific number of arguments to consider; otherwise the number of arguments that must have this option
+     * @return -1 if there is no specific number of arguments to consider; otherwise the number of arguments that must have this option
+     */
+    public int getNbArguments() {
+        return nbArguments;
     }
 
     /**

@@ -55,10 +55,15 @@ public class CommandLine {
         
         Option option = optionsList.getOptionWithName(optionName);
         if(option == null){
-            throw new RuntimeException("Error : the option \""+optionName+"\" is not recognised.");
+            throw new RuntimeException("Error : the option \""+optionName+"\" is not recognized.");
         }
         if(option.hasArgument() && values.isEmpty()){
             throw new RuntimeException("Error : the option \""+optionName+"\" requires arguments  but has not any.");
+        }
+        
+        if(option.getNbArguments()>=0 && values.size()!=option.getNbArguments()){
+            throw new RuntimeException("Error : the option \""+optionName+"\" must take "
+                    +option.getNbArguments()+" argument(s) but received "+ values.size()+" argument(s)");
         }
         
         givenOptions.put(optionName,values);

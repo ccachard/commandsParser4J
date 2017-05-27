@@ -23,7 +23,7 @@ public class Main {
     public static void main(String[] args) {
         
         Option o1 = new Option("output", "out", true, true, "the output file name.");
-        Option o2 = new Option("input", "in", true, true, "the output file name.");
+        Option o2 = new Option("input", "in", true, 2, "the output file name.");
         Option o3 = new Option("origami", "o", false, false, "is it an origami");
         Option o4 = new Option("size", "s", false, true, "the size of the object.");
         Option o5 = new Option("lol", "l", true, false, "do we want to laugh");
