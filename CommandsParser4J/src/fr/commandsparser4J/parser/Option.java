@@ -14,6 +14,20 @@ package fr.commandsparser4J.parser;
 public class Option {
     
     /**
+     * A possible prefix for an optionName to be considered as one. 
+     * This prefix is used for shortcut.
+     * If it does not start with that prefix in the command line, it will be considered as the value of an optionName.
+     */
+    public static final String PREFIX_OPTION_SHORTCUT = "-";
+    
+    /**
+     * A possible prefix for an optionName to be considered as one.
+     * This prefix is used for fullname.
+     * If it does not start with that prefix in the command line, it will be considered as the value of an optionName.
+     */
+    public static final String PREFIX_OPTION_FULLNAME = "--";
+    
+    /**
      * If true, the option is necessary to be given; otherwise it is optional.
      */
     private final boolean isRequired;
@@ -51,7 +65,11 @@ public class Option {
         this.hasArgument = hasArgument;
         this.name = name;
         this.shortcut = shortcut;
-        this.description = description;
+        if (!description.endsWith(".")){
+            this.description = description + ".";
+        }else{
+            this.description = description;
+        }
     }
 
     /**
@@ -94,6 +112,26 @@ public class Option {
         return description;
     }
     
-    
+    /**
+     * Returns the usage of this Option.
+     * @return the usage of this Option
+     */
+    public String getUsage(){
+        StringBuilder sb = new StringBuilder();
+        if(!shortcut.isEmpty()){
+            sb.append(PREFIX_OPTION_SHORTCUT).append(shortcut);
+            sb.append(" ");
+        }
+        sb.append(PREFIX_OPTION_FULLNAME).append(name);
+        sb.append(" : ");
+        /*if(isRequired){
+            sb.append("(Required) ");
+        }else{
+            sb.append("(Optional) ");
+        }*/
+        sb.append(description);
+                
+        return sb.toString();
+    }
     
 }

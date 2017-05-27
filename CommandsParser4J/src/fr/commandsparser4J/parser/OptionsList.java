@@ -5,6 +5,8 @@
  */
 package fr.commandsparser4J.parser;
 
+import static fr.commandsparser4J.parser.Option.PREFIX_OPTION_FULLNAME;
+import static fr.commandsparser4J.parser.Option.PREFIX_OPTION_SHORTCUT;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -45,7 +47,7 @@ public class OptionsList {
      * Returns a non modifiable view of the required options.
      * @return a non modifiable view of the required options
      */
-    public Map<String,Option> getRequiredOptionsList() {
+    public Map<String,Option> getRequiredOptions() {
         return Collections.unmodifiableMap(requiredOptions);
     }
 
@@ -53,7 +55,7 @@ public class OptionsList {
      * Returns a non modifiable view of the optional options.
      * @return a non modifiable view of the optional options
      */
-    public Map<String,Option> getOptionalOptionsList() {
+    public Map<String,Option> getOptionalOptions() {
         return Collections.unmodifiableMap(optionalOptions);
     }
     
@@ -61,34 +63,12 @@ public class OptionsList {
      * Returns a non modifiable view of the available options.
      * @return a non modifiable view of the available options
      */
-    public Map<String,Option> getOptionsList(){
+    public Map<String,Option> getOptions(){
         Map<String,Option> optionsList = new HashMap<>(requiredOptions);
         optionsList.putAll(optionalOptions);
         return Collections.unmodifiableMap(optionsList);
     }
 
-    /**
-     * Return a non modifiable view of the mapping between option's shortcut and their name.
-     * @return a non modifiable view of the mapping between option's shortcut and their name
-     */
-    public Map<String, String> getOptionsShortcutsMapping() {
-        return Collections.unmodifiableMap(optionsShortcuts);
-    }
-    
-    /**
-     * Adds an option to the list of available options.
-     * @param option the option to add to the list of available options.
-     */
-    public void addOption(final Option option){
-        if(option.isRequired()){
-            requiredOptions.put(option.getName(),option);
-        }else{
-            optionalOptions.put(option.getName(),option);
-        }
-        
-        optionsShortcuts.put(option.getShortcut(), option.getName());
-    }
-    
     /**
      * Returns the Option associated to the given name if found in the list of available options;
      * otherwise returns null if Option not found.
@@ -129,4 +109,67 @@ public class OptionsList {
     public String getOptionNameWithShortcut(final String shortcut){
         return optionsShortcuts.get(shortcut);
     }
+    
+    /**
+     * Return a non modifiable view of the mapping between option's shortcut and their name.
+     * @return a non modifiable view of the mapping between option's shortcut and their name
+     */
+    public Map<String, String> getOptionsShortcutsMapping() {
+        return Collections.unmodifiableMap(optionsShortcuts);
+    }
+    
+    /**
+     * Adds an option to the list of available options.
+     * @param option the option to add to the list of available options.
+     */
+    public void addOption(final Option option){
+        checksIfNameAlreadyUsed(option.getName());
+        checksIfShortcutAlreadyUsed(option.getShortcut());
+        if(option.isRequired()){
+            requiredOptions.put(option.getName(),option);
+        }else{
+            optionalOptions.put(option.getName(),option);
+        }
+        
+        if(!option.getShortcut().isEmpty() && option.getShortcut()!=null){
+            optionsShortcuts.put(option.getShortcut(), option.getName());
+        }
+        
+    }
+    
+    /**
+     * Checks if the given shortcut is already used by another option. 
+     * If it is already used, we quit and print an error to the user.
+     * @param shortcut the shortcut we want to check
+     */
+    private void checksIfShortcutAlreadyUsed(String shortcut){
+        if (optionsShortcuts.containsKey(shortcut)){
+            throw new RuntimeException("Error : the shortcut "+PREFIX_OPTION_SHORTCUT+shortcut
+                    +" is already used for option "+PREFIX_OPTION_FULLNAME+optionsShortcuts.get(shortcut));
+        }
+        
+        Map<String, Option> options = getOptions();
+        if(options.containsKey(shortcut)){
+            throw new RuntimeException("Error : the name "+shortcut
+                    +" is already used for option "+PREFIX_OPTION_FULLNAME+options.get(shortcut));
+        }
+    }
+    
+    /**
+     * Checks if the given name is already used by another option. 
+     * If it is already used, we quit and print an error to the user.
+     * @param optionName the name we want to check
+     */
+    private void checksIfNameAlreadyUsed(String optionName){
+        if (optionsShortcuts.containsKey(optionName)){
+            throw new RuntimeException("Error : the name "+optionName
+                    +" is already used for shortcut of the option "+PREFIX_OPTION_FULLNAME+optionsShortcuts.get(optionName));
+        }
+        
+        Map<String, Option> options = getOptions();
+        if(options.containsKey(optionName)){
+            throw new RuntimeException("Error : the name "+optionName+" is already used.");
+        }
+    }
+
 }

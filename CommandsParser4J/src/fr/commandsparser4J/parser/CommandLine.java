@@ -58,7 +58,7 @@ public class CommandLine {
             throw new RuntimeException("Error : the option \""+optionName+"\" is not recognised.");
         }
         if(option.hasArgument() && values.isEmpty()){
-            throw new RuntimeException("Error : the option \""+optionName+"\" requires arguments  but has any.");
+            throw new RuntimeException("Error : the option \""+optionName+"\" requires arguments  but has not any.");
         }
         
         givenOptions.put(optionName,values);
@@ -69,8 +69,20 @@ public class CommandLine {
      * @param optionName the option we want to consider
      * @return true if the option is used by the user; otherwise false
      */
-    public boolean isOptionUsedByUser(String optionName){
+    public boolean isOptionGivenByUser(String optionName){
         return givenOptions.containsKey(optionName);
+    }
+    
+    /**
+     * Returns a non modifiable view of the values associated to an otpion if given by the user; null otherwise.
+     * @param optionName the name of the option we want the values
+     * @return a non modifiable view of the values associated to an otpion if given by the user; null otherwise.
+     */
+    public List<String> getValuesForOption(String optionName){
+        if (givenOptions.containsKey(optionName)){
+            return Collections.unmodifiableList(givenOptions.get(optionName));
+        }
+        return null;
     }
     
     /**
