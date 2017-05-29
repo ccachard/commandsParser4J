@@ -7,7 +7,6 @@ package fr.commandsparser4J.parser;
 
 import static fr.commandsparser4J.parser.Option.PREFIX_OPTION_FULLNAME;
 import static fr.commandsparser4J.parser.Option.PREFIX_OPTION_SHORTCUT;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -140,14 +139,14 @@ public class CommandLineParser {
         sb.append("Usage : ").append(applicationName);
         
         sb.append("\n").append("\t").append("Required options :");
-        for(Option requiredOption : optionsList.getRequiredOptions().values()){
-            sb.append("\n").append("\t").append(requiredOption.getUsage());
-        }
+        optionsList.getRequiredOptions().values().stream().forEach((requiredOption) -> {
+            sb.append("\n").append("\t").append("\t").append(requiredOption.getUsage());
+        });
         sb.append("\n");
         sb.append("\n").append("\t").append("Optional options :");
-        for(Option optionalOption : optionsList.getOptionalOptions().values()){
-            sb.append("\n").append("\t").append(optionalOption.getUsage());
-        }
+        optionsList.getOptionalOptions().values().stream().forEach((optionalOption) -> {
+            sb.append("\n").append("\t").append("\t").append(optionalOption.getUsage());
+        });
         
         System.out.println(sb.toString());
     }

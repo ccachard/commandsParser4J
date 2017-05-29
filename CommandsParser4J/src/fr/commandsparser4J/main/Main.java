@@ -43,7 +43,7 @@ public class Main {
         }
         
         CommandLineParser cmdParser = new CommandLineParser(options);
-        
+        cmdParser.printUsage("CommandsParser4J");
         try{
             cmdParser.parse(args);
         }catch(Exception e){

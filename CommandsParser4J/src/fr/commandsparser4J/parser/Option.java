@@ -168,15 +168,16 @@ public class Option {
             sb.append(" ");
         }
         sb.append(PREFIX_OPTION_FULLNAME).append(name);
-        sb.append(" : ");
+        //sb.append(" : ");
         /*if(isRequired){
             sb.append("(Required) ");
         }else{
             sb.append("(Optional) ");
         }*/
-        sb.append(description);
-                
-        return sb.toString();
+        //sb.append(description);
+        
+        return String.format("%-20s%-5s%s", sb.toString(),":",description);
+        //return sb.toString();
     }
     
 }
